@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.csu.mapper.AuctionUserMapper">
+	<resultMap id="BaseResultMap" type="com.csu.pojo.AuctionUser" >
+		<id column="userid" property="userId"/>
+		<result column="username" property="userName"/>
+		<result column="userpassword" property="userPassword"/>
+		<result column="userisadmin" property="userIsAdmin"/>
+		<collection property="auctionRecords" ofType="com.csu.pojo.AuctionRecord" select="com.csu.mapper.AuctionRecordMapper.getAuctionRecordsByUserId" column="userid"/>
+	</resultMap>
+	
+	<select id="isUser" parameterType="java.lang.String" resultType="java.lang.String">
+		select userpassword from auctionuser where username = #{userName}
+	</select>
+	
+	<insert id="insert" parameterType="com.csu.pojo.AuctionUser">
+		insert into auctionuser(username,userpassword,userisadmin) values(#{userName},#{userPassword},#{userIsAdmin})
+	</insert>
+	
+	<select id="getAuctionUserByUserId" parameterType="Integer" resultMap="BaseResultMap">
+		select * from auctionuser where userid = #{userId}
+	</select>
+	
+	<select id="getAuctionUserByUnAndUpw" parameterType="com.csu.pojo.AuctionUser" resultMap="BaseResultMap">
+		select * from auctionuser
+		<where>
+			<if test="userName!=null">
+				and username = #{userName}
+			</if>
+			<if test="userPassword!=null">
+				and userpassword = #{userPassword}
+			</if>
+		</where> 
+	</select>
+	
+</mapper>

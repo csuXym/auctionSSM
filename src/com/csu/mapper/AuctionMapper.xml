@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.csu.mapper.AuctionMapper">
+	<resultMap id="BaseResultMap" type="com.csu.pojo.Auction" >
+		<id column="auctionid" property="auctionId"/>
+		<result column="auctionname" property="auctionName"/>
+		<result column="auctionstartprice" property="auctionStartPrice"/>
+		<result column="auctionstarttime" property="auctionStartTime"/>
+		<result column="auctionendtime" property="auctionEndTime"/>
+		<result column="auctionpic" property="auctionPic"/>
+		<result column="auctiondesc" property="auctionDesc"/>
+		<collection property="auctionRecords" ofType="com.csu.pojo.AuctionRecord" select="com.csu.mapper.AuctionRecordMapper.getAuctionRecordsByAuctionId" column="auctionid"/>
+	</resultMap>
+	
+	<select id="getAuctionsByOnePage" parameterType="com.csu.util.Page" resultMap="BaseResultMap">
+		select * from auction limit #{start},#{count}
+	</select>
+	
+	<select id="getAuctions" resultMap="BaseResultMap">
+		select * from auction
+	</select>
+	
+	<select id="getAuctionByID" parameterType="Integer" resultMap="BaseResultMap">
+		select * from auction where auctionid = #{auctionId}
+	</select>
+	
+	<insert id="insert" parameterType="com.csu.pojo.Auction">
+		insert into auction(auctionname,auctionstartprice,auctionstarttime,auctionendtime,auctionpic,auctiondesc) values(#{auctionName},#{auctionStartPrice},#{auctionStartTime},#{auctionEndTime},#{auctionPic},#{auctionDesc})
+	</insert>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from auction where auctionid = #{auctionId}
+	</delete>
+	
+	<update id="update" parameterType="com.csu.pojo.Auction">
+		update auction set auctionname=#{auctionName},auctionstartprice=#{auctionStartPrice},auctionstarttime=#{auctionStartTime},auctionendtime=#{auctionEndTime},auctionpic=#{auctionPic},auctiondesc=#{auctionDesc} where auctionid = #{auctionId}
+	</update>
+	
+	<select id="total" resultType="Integer">
+		select count(*) as number from auction
+	</select>
+</mapper>
